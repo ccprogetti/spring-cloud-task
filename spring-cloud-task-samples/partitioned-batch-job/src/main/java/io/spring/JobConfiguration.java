@@ -41,6 +41,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.deployer.resource.docker.DockerResource;
 import org.springframework.cloud.deployer.resource.support.DelegatingResourceLoader;
 import org.springframework.cloud.deployer.spi.task.TaskLauncher;
 import org.springframework.cloud.task.batch.partition.DeployerPartitionHandler;
@@ -89,8 +90,9 @@ public class JobConfiguration {
 	public PartitionHandler partitionHandler(TaskLauncher taskLauncher, JobExplorer jobExplorer,
 			TaskRepository taskRepository, @Autowired(required = false) ThreadPoolTaskExecutor executor)
 			throws Exception {
-		Resource resource = this.resourceLoader
-			.getResource("maven://io.spring.cloud:partitioned-batch-job:3.0.0-SNAPSHOT");
+		//Resource resource = this.resourceLoader.getResource("maven://io.spring.cloud:partitioned-batch-job:3.1.1-SNAPSHOT");
+		//es: docker:registry.addvalue.it:5050/addvalue-as/pico/pico-arch-demo/gateway:latest
+		Resource resource = new DockerResource("quay.io/andrea_cavalieri_adv/partitioned-batch-job:3.1.1-SNAPSHOT");	
 
 		DeployerPartitionHandler partitionHandler = new DeployerPartitionHandler(taskLauncher, jobExplorer, resource,
 				"workerStep", taskRepository, executor);
